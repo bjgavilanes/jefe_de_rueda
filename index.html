@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora del Jefe de Rueda</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Librería SheetJS para manejo de Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora del Jefe de Rueda</h1>
+
+        <!-- Sección para añadir jugadores -->
+        <div id="añadir-jugadores" class="section">
+            <h2>Añadir Jugadores</h2>
+            <div class="input-group">
+                <input type="text" id="jugador-input" placeholder="Nombre del Jugador">
+                <button id="add-jugador-btn" class="btn-primary">Agregar Jugador</button>
+            </div>
+            <ul id="jugadores-list"></ul>
+            <button id="iniciar-partida-btn" class="btn-primary">Iniciar Partida</button>
+        </div>
+
+        <!-- Sección de Movimientos -->
+        <div id="movimientos-section" class="section" style="display: none;">
+            <h2>Movimientos del Mercado</h2>
+            <div class="form-group">
+                <label for="tipo-movimiento">Tipo de Movimiento:</label>
+                <select id="tipo-movimiento">
+                    <option value="">Seleccione</option>
+                    <option value="Inicio de Juego">Inicio de Juego</option>
+                    <option value="Compra">Compra</option>
+                    <option value="Venta">Venta</option>
+                    <option value="Cobro de Rendimiento">Cobro de Rendimiento</option>
+                    <option value="Pago de Impuestos">Pago de Impuestos</option>
+                    <option value="Otro Pagos">Otro Pagos</option>
+                </select>
+            </div>
+
+            <!-- Contenedor para Tipo de Renta -->
+            <div id="tipo-renta-container" class="form-group" style="display: none;">
+                <label for="tipo-renta">Tipo de Renta:</label>
+                <select id="tipo-renta">
+                    <option value="">Seleccione</option>
+                    <option value="RENTA FIJA">RENTA FIJA</option>
+                    <option value="RENTA VARIABLE">RENTA VARIABLE</option>
+                </select>
+            </div>
+
+            <!-- Contenedor para Jugador -->
+            <div class="form-group">
+                <label for="jugador">Jugador:</label>
+                <select id="jugador">
+                    <option value="">Seleccione Jugador</option>
+                    <!-- Opciones se llenan dinámicamente -->
+                </select>
+            </div>
+
+            <!-- Contenedor para Empresa -->
+            <div id="empresa-container" class="form-group" style="display: none;">
+                <label for="empresa">Empresa:</label>
+                <select id="empresa">
+                    <option value="">Seleccione Empresa</option>
+                    <!-- Opciones se llenan dinámicamente -->
+                </select>
+            </div>
+
+            <!-- Contenedor para Precio -->
+            <div class="form-group">
+                <label for="precio">Precio (M):</label>
+                <input type="number" id="precio" readonly>
+            </div>
+
+            <!-- Contenedor para Jugador Receptor -->
+            <div id="jugador-receptor-container" class="form-group" style="display: none;">
+                <label for="jugador-receptor">Jugador Receptor:</label>
+                <select id="jugador-receptor">
+                    <option value="">Seleccione Jugador Receptor</option>
+                    <!-- Opciones se llenan dinámicamente -->
+                </select>
+            </div>
+
+            <!-- Contenedor para Jugador Comprador -->
+            <div id="jugador-comprador-container" class="form-group" style="display: none;">
+                <label for="jugador-comprador">Jugador Comprador:</label>
+                <select id="jugador-comprador">
+                    <option value="">Seleccione Jugador Comprador</option>
+                    <!-- Opciones se llenan dinámicamente -->
+                </select>
+            </div>
+
+            <button id="registrar-movimiento-btn" class="btn-primary">Registrar Movimiento</button>
+        </div>
+
+        <!-- Sección del Mercado de Valores -->
+        <div id="mercado-section" class="section" style="display: none;">
+            <h2>Mercado de Valores</h2>
+            <table id="mercado-table">
+                <thead>
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Precio Mercado Primario (M)</th>
+                        <th>Rendimiento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas se llenan dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sección del Portafolio Por Grupo -->
+        <div id="portafolio-section" class="section" style="display: none;">
+            <h2>Portafolio Por Grupo</h2>
+            <table id="portafolio-table">
+                <thead>
+                    <tr>
+                        <th>Jugador</th>
+                        <th>Liquidez (M)</th>
+                        <th>Inversiones (Rendimiento Total)</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas se llenan dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sección de Movimientos Registrados -->
+        <div id="movimientos-registrados-section" class="section" style="display: none;">
+            <h2>Movimientos Registrados</h2>
+            <table id="movimientos-table">
+                <thead>
+                    <tr>
+                        <th>Jugador</th>
+                        <th>Tipo de Movimiento</th>
+                        <th>Empresa</th>
+                        <th>Precio (M)</th>
+                        <th>Rendimiento</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas se llenan dinámicamente -->
+                </tbody>
+            </table>
+            <button id="exportar-btn" class="btn-primary">Exportar Movimientos a Excel</button>
+        </div>
+    </div>
+
+    <script>
+        // Mostrar la sección de movimientos registrados cuando haya movimientos
+        document.addEventListener('DOMContentLoaded', function() {
+            const movimientosRegistradosSection = document.getElementById('movimientos-registrados-section');
+            const observer = new MutationObserver(function() {
+                const movimientosTableBody = document.querySelector('#movimientos-table tbody');
+                if (movimientosTableBody && movimientosTableBody.children.length > 0) {
+                    movimientosRegistradosSection.style.display = 'block';
+                }
+            });
+            const targetNode = document.querySelector('#movimientos-table tbody');
+            if (targetNode) {
+                observer.observe(targetNode, { childList: true });
+            }
+        });
+    </script>
+</body>
+</html>
