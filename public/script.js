@@ -435,11 +435,7 @@ function manejarCompra(jugadorNombre, empresaNombre, precio) {
     jugador.liquidez -= precio;
 
     // Añadir la inversión
-    if (jugador.inversiones[empresaNombre]) {
-        jugador.inversiones[empresaNombre] += 1;
-    } else {
-        jugador.inversiones[empresaNombre] = 1;
-    }
+    jugador.inversiones.push(empresaNombre)
 
     // Registrar el movimiento
     const movimiento = {
