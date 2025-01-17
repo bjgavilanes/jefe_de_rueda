@@ -124,6 +124,11 @@ function actualizarJugadorSelect() {
         optionReceptor.value = jugador.nombre;
         optionReceptor.textContent = jugador.nombre;
         jugadorReceptorSelect.appendChild(optionReceptor);
+
+        const optionComprador = document.createElement('option');
+        optionComprador.value = jugador.nombre;
+        optionComprador.textContent = jugador.nombre;
+        jugadorCompradorSelect.appendChild(optionComprador);
     });
 
     // "Decevale" solo en Comprador para Venta
