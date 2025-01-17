@@ -181,30 +181,29 @@ function actualizarEmpresasSegunMovimiento() {
         });
     } else if (tipo === "Venta") {
         // Filtrar empresas que pertenecen al jugador seleccionado
-        const jugador = jugadores.find(j => j.nombre === jugadorSeleccionado);
-        if (!jugador) return;
-
-        const empresasPropias = Object.keys(jugador.inversiones).filter(empresa => jugador.inversiones[empresa] > 0);
-        empresasPropias.forEach(empresaNombre => {
+		document.getElementById('jugador').addEventListener('change', function() {
+	    empresaSelect.innerHTML = '<option value="">Seleccione Empresa</option>';
+		const jugadorSeleccionado = document.getElementById('jugador').value
+		const index = jugadores.findIndex((jugadores) => jugadores.nombre === jugadorSeleccionado)
+        jugadores[index].inversiones.map(empresa => {
             const option = document.createElement('option');
-            option.value = empresaNombre;
-            option.textContent = empresaNombre;
+            option.value = ""
+            option.textContent = empresa
             empresaSelect.appendChild(option);
         });
+});
 
         // Mostrar el selector de Comprador
         document.getElementById('jugador-comprador-container').style.display = 'block';
-        jugadorCompradorSelect.innerHTML = '<option value="Decevale">Decevale</option>'; // Solo Decevale como opción
     } else if (tipo === "Cobro de Rendimiento") {
         // Filtrar empresas que pertenecen al jugador receptor
         const jugadorReceptor = jugadores.find(j => j.nombre === jugadorReceptorSeleccionado);
         if (!jugadorReceptor) return;
 
-        const empresasReceptor = Object.keys(jugadorReceptor.inversiones).filter(empresa => jugadorReceptor.inversiones[empresa] > 0);
-        empresasReceptor.forEach(empresaNombre => {
+        jugadorReceptor.inversiones.forEach(empresaNombre => {
             const option = document.createElement('option');
-            option.value = empresaNombre;
-            option.textContent = empresaNombre;
+            option.value = empresa.EMPRESA;
+            option.textContent = empresa.EMPRESA;
             empresaSelect.appendChild(option);
         });
     } else if (tipo === "Pago de Impuestos") {
