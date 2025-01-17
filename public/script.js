@@ -157,6 +157,7 @@ function actualizarEmpresasSegunMovimiento() {
     const tipo = tipoMovimientoSelect.value;
     const tipoRenta = tipoRentaSelect.value;
     const jugadorSeleccionado = jugadorSelect.value;
+    const jugadorCompradorSeleccionado = jugadorCompradorSelect.value;
     const jugadorReceptorSeleccionado = jugadorReceptorSelect.value;
     const empresaContainer = document.getElementById('empresa-container');
     empresaContainer.style.display = 'block'; // Mostrar siempre el contenedor de Empresa para los casos que lo requieran
