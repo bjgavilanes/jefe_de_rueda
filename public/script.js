@@ -95,7 +95,7 @@ function agregarJugador() {
         const nuevoJugador = {
             nombre: nombre,
             liquidez: 50, // Inicio de Juego: 50M
-            inversiones: {}
+            inversiones: []
         };
         jugadores.push(nuevoJugador);
         const li = document.createElement('li');
