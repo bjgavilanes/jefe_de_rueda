@@ -166,10 +166,12 @@ function actualizarEmpresasSegunMovimiento() {
     empresaSelect.innerHTML = '<option value="">Seleccione Empresa</option>';
 
     if (tipo === "Compra") {
+		precioInput.readOnly = true;
         // Filtrar empresas según Tipo de Renta seleccionado
         if (tipoRenta === "") {
             return; // Esperar a que se seleccione Tipo de Renta
         }
+	    empresaSelect.innerHTML = '';
         const filtroNormalizado = tipoRenta.toUpperCase().trim();
         mercadoDatos.forEach(empresa => {
             const tipoRentaEmpresa = empresa.TIPO_DE_RENTA.toUpperCase().trim();
@@ -181,22 +183,11 @@ function actualizarEmpresasSegunMovimiento() {
             }
         });
     } else if (tipo === "Venta") {
-        // Filtrar empresas que pertenecen al jugador seleccionado
-		document.getElementById('jugador').addEventListener('change', function() {
-	    empresaSelect.innerHTML = '<option value="">Seleccione Empresa</option>';
-		const jugadorSeleccionado = document.getElementById('jugador').value
-		const index = jugadores.findIndex((jugadores) => jugadores.nombre === jugadorSeleccionado)
-        jugadores[index].inversiones.map(empresa => {
-            const option = document.createElement('option');
-            option.value = ""
-            option.textContent = empresa
-            empresaSelect.appendChild(option);
-        });
-});
-
+		precioInput.readOnly = false;
         // Mostrar el selector de Comprador
         document.getElementById('jugador-comprador-container').style.display = 'block';
     } else if (tipo === "Cobro de Rendimiento") {
+		precioInput.readOnly = true;
         // Filtrar empresas que pertenecen al jugador receptor
         const jugadorReceptor = jugadores.find(j => j.nombre === jugadorReceptorSeleccionado);
         if (!jugadorReceptor) return;
@@ -271,7 +262,6 @@ function actualizarPrecio() {
             const empresa = mercadoDatos.find(e => e.EMPRESA === empresaNombre);
             if (empresa) {
                 precioInput.value = empresa.MERCADO_PRIMARIO.toFixed(2);
-                precioInput.readOnly = true;
             }
         } else if (tipo === "Venta") {
             if (jugadorCompradorNombre === "Decevale") {
@@ -279,19 +269,16 @@ function actualizarPrecio() {
                 const empresa = mercadoDatosOriginal.find(e => e.EMPRESA === empresaNombre);
                 if (empresa) {
                     precioInput.value = empresa.MERCADO_SECUNDARIO.toFixed(2);
-                    precioInput.readOnly = true;
                 }
             } else {
                 // Permitir edición manual
                 precioInput.value = '';
-                precioInput.readOnly = false;
             }
         } else if (tipo === "Cobro de Rendimiento") {
             // Auto completar con RENDIMIENTO
             const empresa = mercadoDatosOriginal.find(e => e.EMPRESA === empresaNombre);
             if (empresa) {
                 precioInput.value = empresa.RENDIMIENTO.toFixed(2);
-                precioInput.readOnly = true;
             }
         } else if (tipo === "Pago de Impuestos") {
             // Auto completar con valores fijos
@@ -300,18 +287,14 @@ function actualizarPrecio() {
             } else if (empresaNombre === "RENOVACIÓN CALIFICACIÓN DE RIESGO") {
                 precioInput.value = '4';
             }
-            precioInput.readOnly = true;
         } else if (tipo === "Otro Pagos") {
             // Permitir edición manual
             precioInput.value = '';
-            precioInput.readOnly = false;
         } else {
             precioInput.value = '';
-            precioInput.readOnly = true;
         }
     } else {
         precioInput.value = '';
-        precioInput.readOnly = true;
     }
 
     // Mostrar u ocultar contenedores según el tipo de movimiento
@@ -709,7 +692,6 @@ tipoMovimientoSelect.addEventListener('change', function() {
     jugadorCompradorSelect.value = '';
     empresaSelect.innerHTML = '<option value="">Seleccione Empresa</option>';
     precioInput.value = '';
-    precioInput.readOnly = true;
 
     // Mostrar u ocultar contenedores según el tipo
     const tipo = tipoMovimientoSelect.value;
