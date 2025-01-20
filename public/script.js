@@ -472,11 +472,6 @@ function manejarVenta(vendedorNombre, compradorNombre, empresaNombre, precio) {
         return;
     }
 
-    if (!vendedor.inversiones[empresaNombre] || vendedor.inversiones[empresaNombre] < 1) {
-        alert("El vendedor no posee suficientes títulos de esta empresa.");
-        return;
-    }
-
     if (isNaN(precio) || precio <= 0) {
         alert("Por favor ingrese un precio válido.");
         return;
