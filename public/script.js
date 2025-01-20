@@ -452,6 +452,13 @@ function manejarCompra(jugadorNombre, empresaNombre, precio) {
 // Función para manejar ventas
 function manejarVenta(vendedorNombre, compradorNombre, empresaNombre, precio) {
     const vendedor = jugadores.find(j => j.nombre === vendedorNombre);
+    const vendedor_index = jugadores.findIndex(j => j.nombre === vendedorNombre);
+    const vendedor_portfolio = jugadores[vendedor_index].inversiones.map(empresa => {
+		            const option = document.createElement('option');
+		            option.value = empresa
+		            option.textContent = empresa
+		            empresaSelect.appendChild(option);
+});
     const comprador = (compradorNombre === "Decevale") ? { nombre: "Decevale", liquidez: Infinity, inversiones: {} } : jugadores.find(j => j.nombre === compradorNombre);
     const empresa = mercadoDatosOriginal.find(e => e.EMPRESA === empresaNombre);
 
