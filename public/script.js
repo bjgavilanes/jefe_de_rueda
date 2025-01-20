@@ -186,6 +186,19 @@ function actualizarEmpresasSegunMovimiento() {
 		precioInput.readOnly = false;
         // Mostrar el selector de Comprador
         document.getElementById('jugador-comprador-container').style.display = 'block';
+        // Filtrar empresas que pertenecen al jugador seleccionado
+		function getEnterprisedOwned() {
+			    empresaSelect.innerHTML = '';
+				const jugadorSeleccionado = jugadorSelect.value;
+				const index = jugadores.findIndex((jugadores) => jugadores.nombre === jugadorSeleccionado)
+		        jugadores[index].inversiones.map(empresa => {
+		            const option = document.createElement('option');
+		            option.value = empresa
+		            option.textContent = empresa
+		            empresaSelect.appendChild(option);
+		        });
+		};
+		jugadorSelect.addEventListener('change', getEnterprisedOwned);
     } else if (tipo === "Cobro de Rendimiento") {
 		precioInput.readOnly = true;
         // Filtrar empresas que pertenecen al jugador receptor
